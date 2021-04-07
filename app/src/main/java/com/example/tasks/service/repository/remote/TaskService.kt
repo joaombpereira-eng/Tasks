@@ -43,9 +43,9 @@ interface TaskService {
 
     @HTTP(method = "PUT", path = "Task/Undo", hasBody = true)
     @FormUrlEncoded
-    fun update(@Field("id") id: Int): Call<Boolean>
+    fun undo(@Field("id") id: Int): Call<Boolean>
 
-    @HTTP(method = "DELETE", path = "Task/Undo", hasBody = true)
+    @HTTP(method = "DELETE", path = "Task", hasBody = true)
     @FormUrlEncoded
     fun delete(@Field("id") id: Int): Call<Boolean>
 }
