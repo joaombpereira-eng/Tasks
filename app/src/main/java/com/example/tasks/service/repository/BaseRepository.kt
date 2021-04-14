@@ -3,12 +3,24 @@ package com.example.tasks.service.repository
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Build
+import com.example.tasks.service.constants.TaskConstants
+import com.google.gson.Gson
+
 
 open class BaseRepository(context: Context) {
 
+    val mContext: Context = context
+
+    fun fail(code: Int) = code != TaskConstants.HTTP.SUCCESS
+
+    fun failRespose(respose: String): String {
+        return Gson().fromJson(respose, String::class.java)
+    }
+
     /**
-     * Verifiva se existe conexão com internet
+     * Verifica se existe conexão com internet
      */
     fun isConnectionAvailable(context: Context): Boolean {
         var result = false
@@ -30,10 +42,12 @@ open class BaseRepository(context: Context) {
                         ConnectivityManager.TYPE_ETHERNET -> true
                         else -> false
                     }
+
                 }
             }
         }
 
         return result
     }
+
 }

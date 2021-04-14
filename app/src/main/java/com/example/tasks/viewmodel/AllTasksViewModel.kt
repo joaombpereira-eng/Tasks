@@ -4,75 +4,80 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
-import com.example.tasks.service.model.PriorityModel
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.TaskRepository
 
 class AllTasksViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mTaskRepository = TaskRepository(application)
-    private var mTaskFilter = 0
-
-    private val mList = MutableLiveData<List<TaskModel>>()
-    var tasks: LiveData<List<TaskModel>> = mList
-
     private val mValidation = MutableLiveData<ValidationListener>()
-    var validation: LiveData<ValidationListener> = mValidation
+    val validation: LiveData<ValidationListener> = mValidation
+
+    private val mTaskList = MutableLiveData<List<TaskModel>>()
+    val taskList: LiveData<List<TaskModel>> = mTaskList
+
+    // Acesso a dados
+    private val mTaskRepository: TaskRepository = TaskRepository(application)
+    private val mContext = application.applicationContext
+    private var mTaskFilter = 0
 
     fun list(taskFilter: Int) {
         mTaskFilter = taskFilter
-
         val listener = object : APIListener<List<TaskModel>> {
-            override fun onSuccess(model: List<TaskModel>) {
-                mList.value = model
+            override fun onSuccess(result: List<TaskModel>, statusCode: Int) {
+                mTaskList.value = result
             }
 
-            override fun onFailure(str: String) {
-                mList.value = arrayListOf()
-                mValidation.value = ValidationListener(str)
+            override fun onFailure(message: String) {
+                mTaskList.value = null
+                mValidation.value = ValidationListener(message)
             }
         }
 
-        when (mTaskFilter) {
-            TaskConstants.FILTER.ALL -> mTaskRepository.all(listener)
-            TaskConstants.FILTER.NEXT -> mTaskRepository.nextWeek(listener)
-            else -> mTaskRepository.overDue(listener)
+        if (taskFilter == TaskConstants.FILTER.ALL) {
+            mTaskRepository.all(listener)
+        } else if (taskFilter == TaskConstants.FILTER.NEXT) {
+            mTaskRepository.next(listener)
+        } else {
+            mTaskRepository.expired(listener)
         }
     }
 
-    fun delete(id: Int) {
+    fun deleteTask(id: Int) {
         mTaskRepository.delete(id, object : APIListener<Boolean> {
-            override fun onSuccess(model: Boolean) {
-                list(mTaskFilter)
+            override fun onSuccess(result: Boolean, statusCode: Int) {
                 mValidation.value = ValidationListener()
+                list(mTaskFilter)
             }
 
-            override fun onFailure(str: String) {
-                mValidation.value = ValidationListener(str)
+            override fun onFailure(message: String) {
+                mValidation.value = ValidationListener(message)
             }
+
         })
     }
 
-    fun complete(id: Int) {
+    fun completeTask(id: Int) {
         updateStatus(id, true)
     }
 
-    fun undo(id: Int) {
+    fun undoTask(id: Int) {
         updateStatus(id, false)
     }
 
     private fun updateStatus(id: Int, complete: Boolean) {
         mTaskRepository.updateStatus(id, complete, object : APIListener<Boolean> {
-            override fun onSuccess(model: Boolean) {
+            override fun onSuccess(result: Boolean, statusCode: Int) {
                 list(mTaskFilter)
             }
 
-            override fun onFailure(str: String) {
+            override fun onFailure(message: String) {
+                mValidation.value = ValidationListener(message)
             }
         })
     }
+
 }

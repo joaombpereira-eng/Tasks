@@ -4,11 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.biometric.BiometricManager
 
-class FingerPrintHelper {
-
+class FingerprintHelper {
     companion object {
         fun isAuthenticationAvailable(context: Context): Boolean {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 return false
             }
 

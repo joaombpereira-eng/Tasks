@@ -2,11 +2,9 @@ package com.example.tasks.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.view.Menu
+import android.view.View
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.drawerlayout.widget.DrawerLayout
@@ -28,13 +26,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Viewmodel
         mViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        // Barra de nagegação
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // Botão para adição de tarefas
         val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             startActivity(Intent(this, TaskFormActivity::class.java))
         }
 
@@ -46,8 +47,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume()
         mViewModel.loadUserName()
+        super.onResume()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -67,29 +68,29 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        // Escuta ação de click para logout
         navView.setNavigationItemSelectedListener {
             if (it.itemId == R.id.nav_logout) {
                 mViewModel.logout()
             } else {
-                NavigationUI.onNavDestinationSelected(it, navController)
-                drawerLayout.closeDrawer(GravityCompat.START)
+                NavigationUI.onNavDestinationSelected(it, navController);
+                drawerLayout.closeDrawer(GravityCompat.START);
             }
             true
         }
     }
 
     private fun observe() {
-        mViewModel.userName.observe(this, Observer {
-            val nav = findViewById<NavigationView>(R.id.nav_view)
-            val header = nav.getHeaderView(0)
-
-            header.findViewById<TextView>(R.id.text_name).text = it
-        })
-
         mViewModel.logout.observe(this, Observer {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         })
-    }
 
+        mViewModel.userName.observe(this, Observer {
+            val navView = findViewById<NavigationView>(R.id.nav_view)
+            val header = navView.getHeaderView(0)
+
+            header.findViewById<TextView>(R.id.text_name).text = it
+        })
+    }
 }

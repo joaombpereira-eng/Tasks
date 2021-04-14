@@ -42,9 +42,9 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         mViewModel.create.observe(this, Observer {
             if (it.success()) {
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             } else {
-                val message = it.failure()
-                Toast.makeText(this, it.failure(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, it.failure(), Toast.LENGTH_SHORT).show()
             }
         })
     }

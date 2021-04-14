@@ -19,9 +19,9 @@
 
     <View
         android:id="@+id/view_description"
+        style="@style/ViewElementsDivider"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_description"
-        style="@style/ViewDivider"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_description" />
 
     <TextView
         android:id="@+id/text_priority"
@@ -44,11 +44,11 @@
 
     <View
         android:id="@+id/view_complete"
+        style="@style/ViewElementsDivider"
         android:layout_width="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_priority"
-        style="@style/ViewDivider"/>
+        app:layout_constraintTop_toBottomOf="@+id/spinner_priority" />
 
     <CheckBox
         android:id="@+id/check_complete"
@@ -63,11 +63,11 @@
 
     <View
         android:id="@+id/view_date"
+        style="@style/ViewElementsDivider"
         android:layout_width="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_complete"
-        style="@style/ViewDivider"/>
+        app:layout_constraintTop_toBottomOf="@+id/check_complete" />
 
     <Button
         android:id="@+id/button_date"
@@ -81,14 +81,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_date" />
 
+    <View
+        android:id="@+id/view_save"
+        style="@style/ViewElementsDivider"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_date" />
+
     <Button
         android:id="@+id/button_save"
+        style="@style/DefaultButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/adicionar_tarefa"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        style="@style/DefaultButton" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

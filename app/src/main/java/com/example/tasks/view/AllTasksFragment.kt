@@ -28,14 +28,13 @@ class AllTasksFragment : Fragment() {
         mViewModel = ViewModelProvider(this).get(AllTasksViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_all_tasks, container, false)
 
-        // Filtro de Tarefas
+        // Filtro de tarefas
         mTaskFilter = arguments!!.getInt(TaskConstants.BUNDLE.TASKFILTER, 0)
 
         val recycler = root.findViewById<RecyclerView>(R.id.recycler_all_tasks)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = mAdapter
 
-        // Eventos disparados ao clicar nas linhas da RecyclerView
         mListener = object : TaskListener {
             override fun onListClick(id: Int) {
                 val intent = Intent(context, TaskFormActivity::class.java)
@@ -46,15 +45,15 @@ class AllTasksFragment : Fragment() {
             }
 
             override fun onDeleteClick(id: Int) {
-                mViewModel.delete(id)
+                mViewModel.deleteTask(id)
             }
 
             override fun onCompleteClick(id: Int) {
-                mViewModel.complete(id)
+                mViewModel.completeTask(id)
             }
 
             override fun onUndoClick(id: Int) {
-                mViewModel.undo(id)
+                mViewModel.undoTask(id)
             }
         }
 
@@ -72,15 +71,15 @@ class AllTasksFragment : Fragment() {
     }
 
     private fun observe() {
-        mViewModel.tasks.observe(viewLifecycleOwner, Observer {
-            if (it.count() > 0) {
+        mViewModel.taskList.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
                 mAdapter.updateList(it)
             }
         })
 
         mViewModel.validation.observe(viewLifecycleOwner, Observer {
             if (it.success()) {
-                Toast.makeText(context, getString(R.string.task_removed), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.task_removed, Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, it.failure(), Toast.LENGTH_SHORT).show()
             }

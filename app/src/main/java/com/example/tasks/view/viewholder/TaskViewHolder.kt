@@ -16,7 +16,7 @@ import java.util.*
 class TaskViewHolder(itemView: View, val listener: TaskListener) :
     RecyclerView.ViewHolder(itemView) {
 
-    private val mDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    private val mDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
     private val mPriorityRepository = PriorityRepository(itemView.context)
 
     private var mTextDescription: TextView = itemView.findViewById(R.id.text_description)
@@ -24,23 +24,21 @@ class TaskViewHolder(itemView: View, val listener: TaskListener) :
     private var mTextDueDate: TextView = itemView.findViewById(R.id.text_due_date)
     private var mImageTask: ImageView = itemView.findViewById(R.id.image_task)
 
-    /**
-     * Atribui valores aos elementos de interface e também eventos
-     */
     fun bindData(task: TaskModel) {
 
         this.mTextDescription.text = task.description
         this.mTextPriority.text = mPriorityRepository.getDescription(task.priorityId)
 
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(task.dueDate)
+        val date = SimpleDateFormat("yyyy-MM-dd").parse(task.dueDate)
         this.mTextDueDate.text = mDateFormat.format(date)
 
+        // Faz o tratamento para tarefas já completas
         if (task.complete) {
-            mTextDescription.setTextColor(Color.GRAY)
-            mImageTask.setImageResource(R.drawable.ic_done)
+            mTextDescription.setTextColor(Color.GRAY);
+            mImageTask.setImageResource(R.drawable.ic_done);
         } else {
-            mTextDescription.setTextColor(Color.BLACK)
-            mImageTask.setImageResource(R.drawable.ic_todo)
+            mTextDescription.setTextColor(Color.BLACK);
+            mImageTask.setImageResource(R.drawable.ic_todo);
         }
 
         // Eventos
